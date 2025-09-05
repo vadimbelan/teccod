@@ -1,14 +1,19 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException, Query
 from typing import Optional, List, Dict
+
+from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 from app.opensearch.index import create_index_if_not_exists, index_exists, get_cluster_health
 from app.services.seed_service import seed_demo_documents
 from app.models.schemas import SeedResult
 from app.services.search_service import search_documents
+from app.core.config import settings
 
 router = APIRouter()
+templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/health", tags=["system"])
@@ -56,3 +61,34 @@ def search(
         raise
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=f"Search error: {exc}") from exc
+
+
+@router.get("/ui", response_class=HTMLResponse, tags=["ui"])
+def ui(
+    request: Request,
+    q: Optional[str] = Query(None),
+    content_type: Optional[str] = Query(None),
+) -> HTMLResponse:
+    results: List[Dict[str, str]] = []
+    error: Optional[str] = None
+
+    if q:
+        ct = None if (content_type in (None, "", "any")) else content_type
+        try:
+            results = search_documents(q=q, content_type=ct, size=20)
+        except HTTPException as exc:  # ошибки валидации/422
+            error = str(exc.detail)
+        except Exception as exc:  # noqa: BLE001
+            error = f"Search error: {exc}"
+
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "q": q or "",
+            "content_type": content_type or "any",
+            "content_types": ["any", *settings.content_types],
+            "results": results,
+            "error": error,
+        },
+    )

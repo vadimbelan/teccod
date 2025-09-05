@@ -3,9 +3,62 @@
   <head>
     <meta charset="utf-8">
     <title>TECCOD Test Task</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; line-height: 1.5; }
+      .container { max-width: 900px; margin: 0 auto; }
+      h1 { margin-bottom: 0.25rem; }
+      .sub { color: #666; margin-top: 0; }
+      form { margin: 1rem 0 1.5rem; }
+      input[type="text"] { width: 100%; max-width: 420px; padding: 0.5rem; font-size: 1rem; }
+      .radios { margin: 0.75rem 0; }
+      .radio { margin-right: 0.75rem; }
+      button { padding: 0.5rem 0.9rem; font-size: 1rem; cursor: pointer; }
+      .error { color: #b00020; margin: 0.5rem 0; }
+      .result { border: 1px solid #e6e6e6; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 0.75rem; }
+      .title { font-weight: 600; margin-bottom: 0.25rem; }
+      .snippet { color: #333; white-space: pre-wrap; }
+      .muted { color: #888; font-size: 0.9rem; }
+    </style>
   </head>
   <body>
-    <h1>TECCOD Test Task</h1>
-    <p>...<a href="/docs">/docs</a></p>
+    <div class="container">
+      <h1>OpenSearch FastAPI Demo</h1>
+      <p class="sub">Поиск по <code>title</code> и <code>content</code> + фильтр по <code>content_type</code>.</p>
+
+      <form method="get" action="/ui">
+        <label for="q"><strong>Ключевое слово</strong></label><br>
+        <input type="text" id="q" name="q" value="{{ q | e }}" placeholder="например, FastAPI, Docker, OpenSearch ..." />
+
+        <div class="radios">
+          <strong>Тип контента:</strong>
+          {% for ct in content_types %}
+            <label class="radio">
+              <input type="radio" name="content_type" value="{{ ct }}" {% if content_type == ct %}checked{% endif %}>
+              {{ ct }}
+            </label>
+          {% endfor %}
+        </div>
+
+        <button type="submit">Искать</button>
+      </form>
+
+      {% if error %}
+        <div class="error">{{ error }}</div>
+      {% endif %}
+
+      {% if q and results|length == 0 and not error %}
+        <p class="muted">Ничего не найдено по запросу «{{ q|e }}».</p>
+      {% endif %}
+
+      {% for item in results %}
+        <div class="result">
+          <div class="title">{{ item.title }}</div>
+          <div class="snippet">{{ item.snippet }}</div>
+        </div>
+      {% endfor %}
+
+      <p class="muted">API: <a href="/docs">/docs</a></p>
+    </div>
   </body>
 </html>
