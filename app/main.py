@@ -11,6 +11,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("app")
 
+
 def create_app() -> FastAPI:
     app = FastAPI(
         title="OpenSearch FastAPI Demo",
@@ -18,7 +19,6 @@ def create_app() -> FastAPI:
         docs_url="/docs",
         redoc_url="/redoc",
     )
-
 
     app.include_router(api_router)
 

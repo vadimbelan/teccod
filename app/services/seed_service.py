@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Iterable, List, Tuple
+from typing import Iterable, List
 
 from opensearchpy.helpers import bulk  # type: ignore
 

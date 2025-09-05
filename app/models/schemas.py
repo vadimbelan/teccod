@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pydantic import BaseModel, Field, validator
-from typing import Literal, Optional
+from typing import Literal
 
 from app.core.config import settings
 
