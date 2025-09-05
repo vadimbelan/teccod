@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
+
 from app.opensearch.index import create_index_if_not_exists, index_exists, get_cluster_health
+from app.services.seed_service import seed_demo_documents
+from app.models.schemas import SeedResult
 
 router = APIRouter()
 
@@ -29,3 +32,11 @@ def init_index() -> dict:
         }
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=f"Init index error: {exc}") from exc
+
+
+@router.post("/seed", response_model=SeedResult, tags=["data"])
+def seed() -> SeedResult:
+    try:
+        return seed_demo_documents()
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"Seed error: {exc}") from exc
