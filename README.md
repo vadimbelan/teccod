@@ -103,3 +103,6 @@ pytest -q -k search_examples
 
 - Security Plugin OpenSearch отключён.  
 - Подключение к OpenSearch — по HTTP без аутентификации/SSL.  
+
+## Белан Вадим
+Тестовое задание. [Резюме](https://docs.google.com/document/d/1ZhNRsDc3YNTaZdVlhBotcoOm0J17BwrF8RsNxHhnBi0/edit?tab=t.0), [hh.ru](https://hh.ru/resume/d62ef8b8ff0f55c25e0039ed1f77716e4e7859)
