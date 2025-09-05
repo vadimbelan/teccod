@@ -49,6 +49,36 @@ services:
       retries: 12
       start_period: 20s
 
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: os-fastapi-web
+    depends_on:
+      opensearch:
+        condition: service_healthy
+    environment:
+      APP_HOST: "0.0.0.0"
+      APP_PORT: "8000"
+      OS_HOST: "opensearch"
+      OS_PORT: "9200"
+      OS_USER: ""
+      OS_PASSWORD: ""
+      OS_USE_SSL: "false"
+      OS_VERIFY_CERTS: "false"
+      OS_INDEX_NAME: "documents"
+      CONTENT_TYPES: "article,blog,news,report"
+    ports:
+      - "8000:8000"
+    networks:
+      - opensearch-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/health >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
 networks:
   opensearch-net:
 
