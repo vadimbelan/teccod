@@ -6,7 +6,11 @@ from fastapi import APIRouter, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from app.opensearch.index import create_index_if_not_exists, index_exists, get_cluster_health
+from app.opensearch.index import (
+    create_index_if_not_exists,
+    index_exists,
+    get_cluster_health,
+)
 from app.services.seed_service import seed_demo_documents
 from app.models.schemas import SeedResult
 from app.services.search_service import search_documents
@@ -26,7 +30,9 @@ def os_health() -> dict:
     try:
         return get_cluster_health()
     except Exception as exc:  # noqa: BLE001
-        raise HTTPException(status_code=500, detail=f"OpenSearch health error: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"OpenSearch health error: {exc}"
+        ) from exc
 
 
 @router.post("/init_index", tags=["index"])
@@ -52,7 +58,9 @@ def seed() -> SeedResult:
 @router.get("/search", tags=["search"])
 def search(
     q: str = Query(..., min_length=1, description="Ключевое слово для поиска"),
-    content_type: Optional[str] = Query(None, description="Фильтр по типу контента (term)"),
+    content_type: Optional[str] = Query(
+        None, description="Фильтр по типу контента (term)"
+    ),
     size: int = Query(10, ge=1, le=100, description="Максимум документов в ответе"),
 ) -> List[Dict[str, str]]:
     try:

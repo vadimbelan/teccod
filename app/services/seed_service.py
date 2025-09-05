@@ -62,7 +62,9 @@ def seed_demo_documents() -> SeedResult:
     ]
 
     actions = _make_actions(demo_docs)
-    logger.info("Seeding %d demo documents into index '%s' ...", len(actions), INDEX_NAME)
+    logger.info(
+        "Seeding %d demo documents into index '%s' ...", len(actions), INDEX_NAME
+    )
     success_count, errors = bulk(client, actions, raise_on_error=False)
     if errors:
         logger.warning("Bulk indexing completed with %d errors", len(errors))  # type: ignore[arg-type]

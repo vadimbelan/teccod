@@ -20,9 +20,13 @@ def _make_snippet(text: str, max_len: int = SNIPPET_LEN) -> str:
     return text[:max_len]
 
 
-def search_documents(q: str, content_type: Optional[str] = None, size: int = 10) -> List[Dict[str, str]]:
+def search_documents(
+    q: str, content_type: Optional[str] = None, size: int = 10
+) -> List[Dict[str, str]]:
     if not q or not q.strip():
-        raise HTTPException(status_code=422, detail="Query parameter 'q' must be non-empty")
+        raise HTTPException(
+            status_code=422, detail="Query parameter 'q' must be non-empty"
+        )
 
     if content_type is not None:
         allowed = set(settings.content_types)
@@ -41,11 +45,11 @@ def search_documents(q: str, content_type: Optional[str] = None, size: int = 10)
                     "multi_match": {
                         "query": q,
                         "fields": ["title^2", "content"],
-                        "operator": "and"
+                        "operator": "and",
                     }
                 }
             ],
-            "filter": []
+            "filter": [],
         }
     }
 
@@ -56,11 +60,7 @@ def search_documents(q: str, content_type: Optional[str] = None, size: int = 10)
 
     resp = client.search(
         index=INDEX_NAME,
-        body={
-            "query": query,
-            "_source": ["title", "content"],
-            "size": size
-        },
+        body={"query": query, "_source": ["title", "content"], "size": size},
     )
 
     hits = resp.get("hits", {}).get("hits", [])
