@@ -102,4 +102,4 @@ pytest -q -k search_examples
 # ⚠️ Текущие настройки предназначены **только для DEV**:
 
 - Security Plugin OpenSearch отключён.  
-- Подключение к OpenSearch — по HTTP без аутентификации/SSL.
+- Подключение к OpenSearch — по HTTP без аутентификации/SSL.  
