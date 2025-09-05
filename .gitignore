@@ -1,24 +1,45 @@
-# venv
-.venv/
-venv/
-ENV/
-
 # Python
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 *.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
 
-# IDE/OS
-.idea/
+# Virtual env
+.venv/
+venv/
+ENV/
+
+# IDE / Editor
 .vscode/
-.DS_Store
+.idea/
+*.swp
 
-# pytest
-.pytest_cache/
+# Logs
+*.log
+*.out
+
+# Coverage / testing
 .coverage
+coverage.xml
 htmlcov/
+.pytest_cache/
 
-# env files
+# Envs
 .env
+.env.local
+.env.*.local
+
+# Docker
+*.pid
+*.tar
+*.bak
+
+# System
+.DS_Store
+Thumbs.db
