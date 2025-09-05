@@ -67,5 +67,14 @@ def seed_demo_documents() -> SeedResult:
     )
     success_count, errors = bulk(client, actions, raise_on_error=False)
     if errors:
-        logger.warning("Bulk indexing completed with %d errors", len(errors))  # type: ignore[arg-type]
+        logger.warning(
+            "Bulk indexing completed with %d errors", len(errors)  # type: ignore[arg-type]
+        )
+
+    try:
+        client.indices.refresh(index=INDEX_NAME)
+        logger.info("Index '%s' refreshed after seeding", INDEX_NAME)
+    except Exception:  # noqa: BLE001
+        logger.exception("Failed to refresh index '%s' after seeding", INDEX_NAME)
+
     return SeedResult(indexed=success_count, index=INDEX_NAME)
